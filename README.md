@@ -1,295 +1,249 @@
-### **Leer documento, incluye guía de uso, documentacion y planificación.**
+RoyaleBank
 
-# 🏦 RoyaleBank
-RoyaleBank es una aplicación bancaria moderna que hemos desarrollado como proyecto académico. La plataforma permite a los usuarios registrarse como clientes, crear y gestionar sus cuentas bancarias, y realizar operaciones como transferencias y Bizums de forma rápida y segura.
+RoyaleBank is a full-stack online banking application developed as a university team project. It simulates common digital banking workflows, including customer registration, account management, transfers, phone-number-based payments and transaction history.
 
-Nuestra aplicación busca simular una experiencia real de banca online, integrando funcionalidades clave tanto en el frontend como en el backend, y ofreciendo una interfaz clara y fácil de usar. Se puede acceder a ella en este link: 
-[Acceder a RoyaleBank](https://royale-1wd7.onrender.com/)
+The project combines a web interface with a Spring-based REST API, relational data persistence, cookie-based authentication, automated testing and continuous deployment.
 
+Project status: Academic prototype. It is not intended to process real financial data or credentials.
 
----
+View the live demo
 
-## 🖼️ Capturas de la aplicación y guía de uso
+Key features
 
-A continuación se muestra una serie de pantallas de nuestra aplicación **RoyaleBank**, junto con una breve explicacion de como usarla.
+Customer registration, login and logout
 
----
+Management of multiple bank accounts per customer
 
-### 🔐 Iniciar sesión
+Account balance and transaction history views
 
-![Iniciar sesión](fotos/iniciosesion.png)
+Transfers between accounts using an IBAN
 
-Esta es la pantalla inicial que se abre al iniciar nuestra pagina. En esta pantalla, el usuario puede acceder a su cuenta introduciendo su correo electrónico y contraseña. También si todavía no es cliente puede darle al boton de registrarse para darse de alta.
-Una vez autenticado el Email y contraseña se le llevara a la pagina principal.
+Phone-number-based payments between registered customers
 
----
+Purchase and payment records
 
-### 📝 Registrarse
+Automated unit, integration and end-to-end tests
 
-![Registrarse](fotos/registro.png)
+Continuous integration with GitHub Actions
 
-Los nuevos usuarios pueden darse de alta proporcionando su información personal.  
-Además el formulario de registro incluye validaciones en el lado del cliente utilizando HTML. Gracias a atributos como `required`, `type`, `pattern` y validaciones de longitud, evitamos que se envíen datos mal formateados o incompletos al backend en el cual tambien verificamos estos requisitos. Esto no solo mejora la experiencia del usuario al ofrecer retroalimentación inmediata, sino que también reduce la cantidad de peticiones inválidas que llegan al servidor, optimizando así el rendimiento general de la aplicación. 
+Continuous deployment with Render
 
----
+Technology overview
 
-### 🏠 Pantalla principal (Cuentas del cliente)
+Backend: Java, Spring Framework, Maven
 
-![Pantalla principal](fotos/principal.png)
+API: REST, JSON and HTTP cookies
 
-Aquí se muestran todas las cuentas asociadas al cliente.  
-Desde esta vista el usuario puede consultar saldos, movimientos y acceder a las funciones de **Crear cuenta**, **Bizum** y **transferencia**.
+Persistence: Relational database with repository-based access
 
----
+Frontend: HTML, CSS and JavaScript
 
-### 🆕 Crear cuenta
+Testing: Unit, integration and end-to-end tests with TestRestTemplate
 
-![Crear cuenta](fotos/crearcuenta.png)
+Delivery: GitHub Actions and Render
 
-Desde esta pantalla el cliente puede crear una nueva cuenta bancaria.    
-La cuenta quedará automáticamente asociada a su perfil y será visible en la pantalla principal.
+Application walkthrough
 
+Sign in
 
----
 
-### 🔍 Acciones de una cuenta
 
-![Acciones de cuenta](fotos/acciones.png)
+Existing customers can access their accounts using their email address and password. New users can navigate to the registration form from this screen.
 
-Desde esta vista, el usuario puede gestionar una cuenta concreta.  
-Se ofrecen las siguientes funcionalidades:
+Registration
 
-- **Hacer Bizum**: enviar dinero rápidamente a otros usuarios de RoyaleBank usando su número de teléfono.
-- **Hacer transferencia**: enviar dinero a otras cuentas bancarias introduciendo el IBAN.
-- **Ver historial de transacciones**: consultar los movimientos realizados desde o hacia la cuenta seleccionada.
 
----
 
-### 📄 Historial de transacciones
+New customers can create a profile by providing their personal information. Input is validated in both the browser and backend before being processed.
 
-![Historial de transacciones](fotos/historial.png)
+Account dashboard
 
-Esta pantalla muestra un listado detallado de las transacciones asociadas a una cuenta.  
-Cada movimiento incluye la siguiente información:
 
-- **Concepto**: descripción de la operación.  
-- **Cuenta origen**: IBAN de la cuenta que realizó el envío.  
-- **Cuenta destino**: IBAN de la cuenta que recibió el importe.  
-- **Importe**: cantidad transferida.  
-- **Tipo de transacción**: puede ser transferencia, Bizum, compra, etc.
----
 
-### 📲 Bizum
+The dashboard displays the accounts associated with the authenticated customer. From here, users can review balances and access account operations.
 
-![Bizum](fotos/bizum.png)
+Create an account
 
-Funcionalidad para enviar dinero de forma rápida a otros usuarios registrados en RoyaleBank utilizando solo su número de teléfono.  
-El sistema verifica que el destinatario esté registrado antes de realizar la operación.
 
----
 
-### 💸 Transferencia
+Customers can create an additional bank account, which is automatically associated with their profile.
 
-![Transferencia](fotos/transferencia.png)
+Account operations
 
-Desde esta sección, el cliente puede realizar transferencias bancarias entre sus cuentas o hacia cuentas de terceros dentro del sistema RoyaleBank.  
-Se requiere el número de cuenta destino y el importe.
 
 
+For each account, customers can send a phone-number-based payment, make a transfer or review previous transactions.
 
----
+Transaction history
 
-## 🔧 Backend
 
-El backend de RoyaleBank está desarrollado utilizando **Spring Framework** con persistencia de datos para garantizar un manejo eficiente y seguro de la información.
 
-### Base de datos y entidades
+The transaction view shows the operation type, description, source account, destination account and amount.
 
-Este proyecto cuenta con las siguientes entidades principales:
+Phone-number-based payment
 
-- **Cliente**: Representa a un usuario del banco, identificado de manera única por su correo electrónico y DNI.
-- **Cuenta**: Cada cuenta bancaria está asociada a un único cliente y almacena la información financiera correspondiente.
-- **Pago**: Registra todas las operaciones de pago y transferencias realizadas por los clientes.
-- **Token**: Utilizado para la autenticación y gestión segura de las sesiones de usuario.
 
----
 
-| **Entidad** | **Atributo**       | **Descripción**                        | **Ejemplo**                   | **Clave / Restricción**             |
-|-------------|-------------------|-------------------------------------|------------------------------|-----------------------------------|
-| **Cliente** | cliente_id        | Identificador único del cliente      | 123                          | Clave primaria (PK)                |
-|             | dni               | Documento Nacional de Identidad      | "12345678A"                  | Único y obligatorio                |
-|             | nombre            | Nombre del cliente                   | "Juan"                       | Obligatorio                       |
-|             | apellido          | Apellido del cliente                 | "Pérez"                      | Opcional                         |
-|             | email             | Correo electrónico                   | "juan.perez@mail.com"        | Único y obligatorio                |
-|             | telefono          | Número de teléfono                   | "600111222"               | Obligatorio                       |
-|             | password          | Contraseña para acceso               | "Jperez123"            | Obligatorio                       |
+Customers can send money to another registered user using their phone number. The backend verifies that the recipient exists before processing the operation.
 
----
+Bank transfer
 
-| **Entidad** | **Atributo**       | **Descripción**                      | **Ejemplo**                   | **Clave / Restricción**             |
-|-------------|-------------------|-----------------------------------|------------------------------|-----------------------------------|
-| **Cuenta**  | cuenta_id         | Identificador único de la cuenta   | 456                          | Clave primaria (PK)                |
-|             | iban              | Número IBAN único de la cuenta     | "ES9121000418450200051332"   | Único y obligatorio                |
-|             | saldo             | Saldo actual de la cuenta          | 1500.75                      | Obligatorio                       |
-|             | sucursal          | Sucursal bancaria                  | "Bilbao"              | Obligatorio                       |
-|             | cliente_id        | Cliente dueño de la cuenta         | 123                          | Clave foránea (FK)                 |
 
----
 
-| **Entidad** | **Atributo**         | **Descripción**                     | **Ejemplo**                   | **Clave / Restricción**             |
-|-------------|---------------------|-----------------------------------|------------------------------|-----------------------------------|
-| **Pago**    | id                  | Identificador único del pago      | 789                          | Clave primaria (PK)                |
-|             | tipo                | Tipo de pago (bizum, transferencia, pago) | "bizum"                     | Obligatorio, validado        |
-|             | importe             | Monto del pago                    | 100.00                       | Obligatorio                       |
-|             | cuenta_origen_id    | Cuenta desde donde se realiza el pago | 456                          | Clave foránea (FK)            |
-|             | cuenta_destino_id   | Cuenta receptora del pago (opcional) | 457                          | Clave foránea (FK), puede ser nulo |
-|             | concepto            | Descripción del pago              | "Pago de factura luz"         | Obligatorio                       |
+Customers can transfer funds between their own accounts or to another account registered in the system.
 
----
+Backend design
 
-| **Entidad** | **Atributo**     | **Descripción**                    | **Clave / Restricción**         |
-|-------------|-----------------|----------------------------------|-------------------------------|
-| **Token**   | id              | Identificador único del token    | Clave primaria (PK)            |
-|             | cliente_id      | Cliente asociado al token        | Clave foránea (FK), relación 1 a 1 |
+The domain model is built around four main entities:
 
----
+Entity
 
-### Relaciones clave entre tablas
+Responsibility
 
-| **Relación**                      | **Descripción**                                                       |
-|----------------------------------|---------------------------------------------------------------------|
-| Cliente → Cuenta (1 a N)          | Un cliente puede tener varias cuentas, pero cada cuenta pertenece a un solo cliente. |
-| Cuenta → Pago (1 a N)             | Una cuenta puede ser origen de muchos pagos.                        |
-| Cuenta → Pago (0 o 1 a N)        | Una cuenta destino puede recibir muchos pagos, pero es opcional para algunos pagos. |
-| Cliente → Token (1 a 1)           | Cada cliente tiene un token único para autenticación.               |
-        
+Cliente
 
+Stores the customer's identity and contact details
 
-### Autenticación mediante cookies
+Cuenta
 
-Para mantener la sesión segura, el backend genera un token de autenticación que se intercambia con el cliente a través de cookies HTTP. Estas cookies están configuradas con atributos que refuerzan la seguridad, tales como `httpOnly`, que impide el acceso a la cookie desde JavaScript para proteger contra ataques de tipo XSS, y `SameSite=Lax`, que limita el envío de cookies en solicitudes cruzadas para evitar ataques CSRF. Además, la cookie es válida para todas las rutas de la aplicación, facilitando una experiencia de usuario fluida durante la sesión.
+Represents a bank account owned by one customer
 
-Gracias a este método, RoyaleBank garantiza una autenticación segura y eficiente, manteniendo protegida la información sensible durante la interacción del usuario con la aplicación.
+Pago
 
+Records transfers, payments and purchases
 
-## Endpoints
+Token
 
-| Endpoint                             | Método HTTP | Request Body         | Response Body         | Códigos HTTP Principales            | Descripción                              |
-|------------------------------------|-------------|----------------------|-----------------------|------------------------------------|------------------------------------------|
-| `/api/royale`                      | POST        | `RegisterRequest`    | `ClientResponse`      | 201 (Creado), 409 (Conflicto)      | Registro de cliente                      |
-| `/api/royale/users`                | POST        | `LoginRequest`       | Vacío                 | 201 (Creado), 401 (No autorizado)  | Login (autenticación), devuelve cookie  |
-| `/api/royale/cuentas`              | POST        | `CrearCuenta`        | Vacío                 | 201 (Creado), 409, 401              | Crear cuenta bancaria                    |
-| `/api/royale`                     | DELETE      | No                   | Vacío                 | 204 (Sin contenido), 401            | Logout (elimina sesión)                  |
-| `/api/royale/bizum`                | POST        | `BizumRequest`       | Vacío                 | 201, 409, 404, 401                  | Bizum (transferencia por teléfono)      |
-| `/api/royale`                      | GET         | No                   | `ClientResponse`      | 200 (OK), 401                      | Obtener perfil cliente                   |
-| `/api/royale/transferencia`        | POST        | `TransferenciaRequest`| Vacío                | 200 (OK), 409, 404, 401            | Realizar transferencia                   |
-| `/api/royale/cuenta/saldo`         | PUT         | `SaldoModRequest`    | Vacío                 | 200 (OK), 409, 404, 401            | Modificar saldo de cuenta                |
-| `/api/royale/compra`               | POST        | `CompraRequest`      | Vacío                 | 200 (OK), 409, 404, 401            | Realizar compra                          |
-| `/api/royale/cuentas/operaciones/{iban}` | GET   | No                   | `List<Pago>`          | 200 (OK), 404, 401                 | Listar operaciones de una cuenta         |
-| `/api/royale/cuentas/{iban}`       | DELETE      | No                   | Vacío                 | 204 (Sin contenido), 404, 401      | Eliminar cuenta bancaria                 |
-| `/api/royale/cliente`              | DELETE      | No                   | Vacío                 | 204 (Sin contenido), 404, 401      | Eliminar cliente                        |
+Associates an authentication token with a customer
 
+Main relationships
 
-## 🧪 Tests
+One customer can own multiple accounts.
 
-En este proyecto se han implementado distintos tipos de pruebas automatizadas para garantizar la calidad y robustez del sistema:
+An account can be the source or destination of multiple payments.
 
-### ✅ Tests Unitarios
-Se han creado pruebas unitarias que validan la lógica de negocio y las restricciones de validación en clases independientes. Por ejemplo:
-- **Validación de campos en el registro** (`RegisterRequest`): se comprueba que campos como DNI, email, teléfono o contraseña cumplen con las restricciones impuestas. También se testean escenarios con múltiples errores a la vez.
+An authentication token is associated with a customer session.
 
-### 🔗 Tests de Integración
-Estas pruebas validan la correcta interacción entre componentes de la aplicación y la persistencia de datos:
-- **Guardar un cliente con cuentas**: se comprueba que se pueden guardar correctamente entidades `Cliente`, `Cuenta` y `Token`, así como las relaciones entre ellas.
-- **Búsquedas en repositorios**: se valida que los datos guardados puedan ser recuperados correctamente por los repositorios `clientesRepository`, `cuentasRepository` y `tokenRepository`.
+Authentication
 
-### 🌐 Tests End-to-End (E2E)
-Se han desarrollado tests E2E usando `TestRestTemplate` para simular peticiones HTTP reales contra el servidor:
-- **Registro de cliente**: se prueba el registro correcto y la detección de duplicados.
-- **Login de usuario**: se comprueba que se puede iniciar sesión correctamente y se recibe una cookie de sesión válida.
-- **Consulta de información del cliente**: se valida que un usuario logueado puede recuperar su perfil.
-- **Creación de cuenta bancaria**: se comprueba que un cliente autenticado puede crear nuevas cuentas asociadas a su perfil.
-- **Eliminación de cliente**: se testea que un cliente autenticado puede eliminar su cuenta y que los datos son eliminados correctamente.
+Authenticated sessions use a token exchanged through an HTTP cookie. The cookie uses HttpOnly to prevent direct JavaScript access and SameSite=Lax to limit cross-site requests.
 
+As this is an academic prototype, the authentication and authorisation design should be independently reviewed before any production use.
 
+API overview
 
-## ⚙️ Integración y Despliegue Continuos (CI/CD)
+Method
 
-### ✅ Integración continua (CI)
+Endpoint
 
-Hemos configurado un sistema de integración continua que se activa automáticamente con cada `push` a la rama `main`.  
-Este proceso está definido en el archivo [`ci.yml`](.github/workflows/ci.yml), y realiza las siguientes acciones:
+Purpose
 
-- Compila el proyecto con **Maven**
-- Ejecuta todos los **tests unitarios, de integración y E2E**
-- Verifica que el código sea válido antes de aceptar cualquier cambio en producción
+POST
 
-Esto garantiza que todos los commits en `main` pasen por un control de calidad automático.
+/api/royale
 
-### 🚀 Despliegue continuo (CD)
+Register a customer
 
-Para el despliegue continuo utilizamos la plataforma [Render](https://render.com).  
-Cada vez que se hace `push` a la rama `main` y las comprobaciones del CI son exitosas, Render:
+POST
 
-- Construye la aplicación automáticamente
-- Realiza el despliegue del backend sin intervención manual
+/api/royale/users
 
-Gracias a esto, aseguramos que los cambios en el proyecto estén disponibles en producción de forma rápida, segura y controlada.
+Authenticate and create a session
 
+DELETE
 
+/api/royale
 
+Log out
 
-## 📅 Planificación 
+GET
 
-Nuestra planificación se basó en una estrategia clara y realista, dividiendo el trabajo por roles entre los cuatro miembros del equipo y organizando las tareas en iteraciones bien definidas.
+/api/royale
 
-### 👥 Reparto del equipo
-- **Backend**: Miguel y Antón  
-- **Frontend**: Álvaro e Iñigo  
-- **Despliegue**: Antón
+Retrieve the authenticated customer profile
 
-### 🔄 Roadmap y Ciclos de Trabajo
+POST
 
-Dividimos el proyecto en tres grandes iteraciones:
+/api/royale/cuentas
 
-#### 🧩 Iteración 1: Estructura base y configuración inicial
-- Diseño de entidades y creación de repositorios (Miguel y Antón)
-- Inicio del desarrollo del frontend: pantalla principal del cliente (Álvaro e Iñigo)
+Create a bank account
 
-#### 🔍 Iteración 2: Lógica de negocio y pruebas
-- Implementación de los servicios y controladores en backend (Miguel y Antón)
-- Desarrollo de tests:
-  - Unitarios e integración para repositorios
-  - End-to-end para probar los endpoints de la API REST
-- Avance del frontend con navegación y funcionalidades como Bizum y Transferencias (Álvaro e Iñigo)
+POST
 
-#### 🚀 Iteración 3: Integración y despliegue
-- Integración completa de frontend con backend
-- Verificación de funcionamiento completo del sistema
-- Despliegue en la plataforma **Render** a cargo de Antón
+/api/royale/bizum
 
-### 📋 División y priorización de tareas (Backlog)
-- [✔️] Diseño de entidades (Miguel, Antón)
-- [✔️] Creación de repositorios y pruebas unitarias (Miguel, Antón)
-- [✔️] Servicios y controladores REST (Miguel, Antón)
-- [✔️] Tests de integración y end-to-end (Miguel, Antón)
-- [✔️] Desarrollo de la interfaz (Álvaro, Iñigo)
-- [✔️] Verificación de funcionalidades del cliente (Álvaro, Iñigo)
-- [✔️] Despliegue final (Antón)
+Send a phone-number-based payment
 
-### 🎯 Objetivos por iteración
+POST
 
-| Iteración | Objetivo principal                                   |
-|-----------|------------------------------------------------------|
-| 1         | Estructura del backend y primeras vistas del frontend|
-| 2         | Lógica de negocio, pruebas y avance del frontend     |
-| 3         | Integración completa y despliegue                    |
+/api/royale/transferencia
 
-### ⚠️ Funcionalidad pendiente: Tienda integrada con API externa
+Make a bank transfer
 
-Inicialmente teníamos planificada una funcionalidad adicional que consistía en una **tienda integrada** en la que se pudieran adquirir productos obtenidos desde una **API externa**.  
-La idea era que, al realizar una compra, esta se reflejara automáticamente en el **historial de transacciones** de la cuenta del usuario, como cualquier otra operación bancaria.
+PUT
 
-Esta funcionalidad fue completamente **implementada y probada en el backend**, incluyendo la integración con la API externa, el procesamiento de pagos y el registro en el historial de movimientos.  
-Sin embargo, debido a **falta de tiempo provocada por el aplazamiento del examen de Microprocesadores**, **no pudimos completar su implementación en el frontend**.
+/api/royale/cuenta/saldo
 
+Update an account balance
+
+POST
+
+/api/royale/compra
+
+Record a purchase
+
+GET
+
+/api/royale/cuentas/operaciones/{iban}
+
+List account transactions
+
+DELETE
+
+/api/royale/cuentas/{iban}
+
+Delete a bank account
+
+DELETE
+
+/api/royale/cliente
+
+Delete a customer profile
+
+Testing
+
+The automated test suite covers several layers of the application:
+
+Unit tests: request validation and business rules
+
+Integration tests: persistence and relationships between customers, accounts and tokens
+
+End-to-end tests: registration, duplicate detection, authentication, authenticated profile retrieval, account creation and customer deletion
+
+CI/CD
+
+The workflow in .github/workflows/ci.yml runs on changes to the main branch. It builds the Maven project and executes the automated test suite. Render handles deployment of successful changes.
+
+Project background
+
+RoyaleBank was originally developed collaboratively as a university project. This repository preserves that shared origin and is being maintained and extended as a software engineering portfolio project.
+
+Individual contributions and subsequent improvements should be documented through the repository's commit history and pull requests.
+
+Roadmap
+
+Add reproducible local setup instructions and environment templates
+
+Strengthen authentication and server-side authorisation controls
+
+Add static and dynamic application security testing
+
+Expand negative and security-focused test coverage
+
+Document the threat model and security findings
+
+Improve API documentation and error responses
+
+Disclaimer
+
+RoyaleBank is an educational project. Do not use real personal, banking or authentication data in the application.
