@@ -1,249 +1,237 @@
-RoyaleBank
+# 🏦 RoyaleBank
 
-RoyaleBank is a full-stack online banking application developed as a university team project. It simulates common digital banking workflows, including customer registration, account management, transfers, phone-number-based payments and transaction history.
+RoyaleBank is a full-stack online banking application developed as a university team project. It simulates common banking operations, including customer registration, account management, transfers, phone-number-based payments and transaction history.
 
 The project combines a web interface with a Spring-based REST API, relational data persistence, cookie-based authentication, automated testing and continuous deployment.
 
-Project status: Academic prototype. It is not intended to process real financial data or credentials.
+> **Project status:** Academic prototype. It is not intended to process real financial data or credentials.
 
-View the live demo
+## Key features
 
-Key features
+- Customer registration, login and logout
+- Management of multiple bank accounts
+- Account balance and transaction history
+- Bank transfers using an IBAN
+- Phone-number-based payments
+- Purchase and payment records
+- Unit, integration and end-to-end tests
+- Continuous integration with GitHub Actions
+- Continuous deployment with Render
 
-Customer registration, login and logout
+## Technology stack
 
-Management of multiple bank accounts per customer
+- **Backend:** Java, Spring Framework and Maven
+- **Frontend:** HTML, CSS and JavaScript
+- **API:** REST and JSON
+- **Database:** Relational database
+- **Authentication:** Token-based sessions using HTTP cookies
+- **Testing:** Unit, integration and E2E tests
+- **CI/CD:** GitHub Actions and Render
 
-Account balance and transaction history views
+## Application walkthrough
 
-Transfers between accounts using an IBAN
+### Sign in
 
-Phone-number-based payments between registered customers
-
-Purchase and payment records
-
-Automated unit, integration and end-to-end tests
-
-Continuous integration with GitHub Actions
-
-Continuous deployment with Render
-
-Technology overview
-
-Backend: Java, Spring Framework, Maven
-
-API: REST, JSON and HTTP cookies
-
-Persistence: Relational database with repository-based access
-
-Frontend: HTML, CSS and JavaScript
-
-Testing: Unit, integration and end-to-end tests with TestRestTemplate
-
-Delivery: GitHub Actions and Render
-
-Application walkthrough
-
-Sign in
-
-
+![Sign-in screen](./fotos/iniciosesion.png)
 
 Existing customers can access their accounts using their email address and password. New users can navigate to the registration form from this screen.
 
-Registration
+### Registration
 
-
+![Registration screen](./fotos/registro.png)
 
 New customers can create a profile by providing their personal information. Input is validated in both the browser and backend before being processed.
 
-Account dashboard
+### Account dashboard
 
+![Account dashboard](./fotos/principal.png)
 
+The dashboard displays all accounts associated with the authenticated customer. Users can review their balances and access the available account operations.
 
-The dashboard displays the accounts associated with the authenticated customer. From here, users can review balances and access account operations.
+### Create an account
 
-Create an account
+![Create-account screen](./fotos/crearcuenta.png)
 
+Customers can create additional bank accounts. Each new account is automatically associated with the authenticated customer.
 
+### Account operations
 
-Customers can create an additional bank account, which is automatically associated with their profile.
+![Account actions](./fotos/acciones.png)
 
-Account operations
+For each account, customers can:
 
+- Send a phone-number-based payment
+- Make a bank transfer
+- Review the transaction history
 
+### Transaction history
 
-For each account, customers can send a phone-number-based payment, make a transfer or review previous transactions.
+![Transaction history](./fotos/historial.png)
 
-Transaction history
+The transaction view displays:
 
+- Operation description
+- Source account
+- Destination account
+- Amount
+- Transaction type
 
+### Phone-number-based payment
 
-The transaction view shows the operation type, description, source account, destination account and amount.
-
-Phone-number-based payment
-
-
+![Phone-number-based payment](./fotos/bizum.png)
 
 Customers can send money to another registered user using their phone number. The backend verifies that the recipient exists before processing the operation.
 
-Bank transfer
+### Bank transfer
 
-
+![Bank transfer](./fotos/transferencia.png)
 
 Customers can transfer funds between their own accounts or to another account registered in the system.
 
-Backend design
+## Backend design
 
-The domain model is built around four main entities:
+The backend is implemented using Spring Framework and follows a REST-based architecture.
 
-Entity
+### Customer entity
 
-Responsibility
+| Attribute | Description | Example | Constraint |
+| --- | --- | --- | --- |
+| `cliente_id` | Unique customer identifier | `123` | Primary key |
+| `dni` | Spanish identity document | `12345678A` | Unique and required |
+| `nombre` | Customer's first name | `Juan` | Required |
+| `apellido` | Customer's surname | `Pérez` | Optional |
+| `email` | Customer's email address | `juan.perez@mail.com` | Unique and required |
+| `telefono` | Customer's phone number | `600111222` | Required |
+| `password` | Customer's password | — | Required |
 
-Cliente
+### Account entity
 
-Stores the customer's identity and contact details
+| Attribute | Description | Example | Constraint |
+| --- | --- | --- | --- |
+| `cuenta_id` | Unique account identifier | `456` | Primary key |
+| `iban` | Unique account IBAN | `ES9121000418450200051332` | Unique and required |
+| `saldo` | Current account balance | `1500.75` | Required |
+| `sucursal` | Bank branch | `Bilbao` | Required |
+| `cliente_id` | Owner of the account | `123` | Foreign key |
 
-Cuenta
+### Payment entity
 
-Represents a bank account owned by one customer
+| Attribute | Description | Example | Constraint |
+| --- | --- | --- | --- |
+| `id` | Unique payment identifier | `789` | Primary key |
+| `tipo` | Payment type | `transferencia` | Required and validated |
+| `importe` | Amount transferred | `100.00` | Required |
+| `cuenta_origen_id` | Source account | `456` | Foreign key |
+| `cuenta_destino_id` | Destination account | `457` | Optional foreign key |
+| `concepto` | Payment description | `Electricity bill` | Required |
 
-Pago
+### Token entity
 
-Records transfers, payments and purchases
+| Attribute | Description | Constraint |
+| --- | --- | --- |
+| `id` | Unique token identifier | Primary key |
+| `cliente_id` | Customer associated with the token | Foreign key |
 
-Token
+### Entity relationships
 
-Associates an authentication token with a customer
+| Relationship | Description |
+| --- | --- |
+| Customer → Account | One customer can own multiple accounts |
+| Account → Payment | One account can be the source of multiple payments |
+| Account → Payment | One account can receive multiple payments |
+| Customer → Token | A token is associated with a customer session |
 
-Main relationships
+## Authentication
 
-One customer can own multiple accounts.
+Authenticated sessions use a token exchanged through an HTTP cookie.
 
-An account can be the source or destination of multiple payments.
+The cookie uses:
 
-An authentication token is associated with a customer session.
+- `HttpOnly` to prevent direct access from JavaScript
+- `SameSite=Lax` to limit cross-site requests
+- An application-wide path to maintain the session across routes
 
-Authentication
+As this is an academic prototype, the authentication and authorisation design should be independently reviewed before production use.
 
-Authenticated sessions use a token exchanged through an HTTP cookie. The cookie uses HttpOnly to prevent direct JavaScript access and SameSite=Lax to limit cross-site requests.
+## API overview
 
-As this is an academic prototype, the authentication and authorisation design should be independently reviewed before any production use.
+| Method | Endpoint | Purpose | Main responses |
+| --- | --- | --- | --- |
+| `POST` | `/api/royale` | Register a customer | `201`, `409` |
+| `POST` | `/api/royale/users` | Authenticate and create a session | `201`, `401` |
+| `DELETE` | `/api/royale` | Log out | `204`, `401` |
+| `GET` | `/api/royale` | Retrieve the customer profile | `200`, `401` |
+| `POST` | `/api/royale/cuentas` | Create a bank account | `201`, `401`, `409` |
+| `POST` | `/api/royale/bizum` | Send a phone-number-based payment | `201`, `401`, `404`, `409` |
+| `POST` | `/api/royale/transferencia` | Make a bank transfer | `200`, `401`, `404`, `409` |
+| `PUT` | `/api/royale/cuenta/saldo` | Update an account balance | `200`, `401`, `404`, `409` |
+| `POST` | `/api/royale/compra` | Record a purchase | `200`, `401`, `404`, `409` |
+| `GET` | `/api/royale/cuentas/operaciones/{iban}` | List account transactions | `200`, `401`, `404` |
+| `DELETE` | `/api/royale/cuentas/{iban}` | Delete a bank account | `204`, `401`, `404` |
+| `DELETE` | `/api/royale/cliente` | Delete a customer profile | `204`, `401`, `404` |
 
-API overview
+## Testing
 
-Method
+The project includes several levels of automated testing.
 
-Endpoint
+### Unit tests
 
-Purpose
+Unit tests validate business logic and request constraints, including:
 
-POST
+- DNI format
+- Email format
+- Phone-number format
+- Password requirements
+- Multiple simultaneous validation errors
 
-/api/royale
+### Integration tests
 
-Register a customer
+Integration tests verify the interaction between application components and the persistence layer:
 
-POST
+- Saving customers with associated accounts
+- Creating and retrieving authentication tokens
+- Persisting entity relationships
+- Querying customer, account and token repositories
 
-/api/royale/users
+### End-to-end tests
 
-Authenticate and create a session
+E2E tests use `TestRestTemplate` to send HTTP requests to the application:
 
-DELETE
+- Customer registration
+- Duplicate customer detection
+- Authentication and session-cookie creation
+- Authenticated profile retrieval
+- Bank-account creation
+- Customer deletion
 
-/api/royale
+## CI/CD
 
-Log out
+The GitHub Actions workflow located at [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) runs automatically when changes are pushed to the main branch.
 
-GET
+The workflow:
 
-/api/royale
+- Builds the project with Maven
+- Runs unit, integration and end-to-end tests
+- Verifies that the application passes the automated checks
 
-Retrieve the authenticated customer profile
+Render is used for continuous deployment after successful changes.
 
-POST
-
-/api/royale/cuentas
-
-Create a bank account
-
-POST
-
-/api/royale/bizum
-
-Send a phone-number-based payment
-
-POST
-
-/api/royale/transferencia
-
-Make a bank transfer
-
-PUT
-
-/api/royale/cuenta/saldo
-
-Update an account balance
-
-POST
-
-/api/royale/compra
-
-Record a purchase
-
-GET
-
-/api/royale/cuentas/operaciones/{iban}
-
-List account transactions
-
-DELETE
-
-/api/royale/cuentas/{iban}
-
-Delete a bank account
-
-DELETE
-
-/api/royale/cliente
-
-Delete a customer profile
-
-Testing
-
-The automated test suite covers several layers of the application:
-
-Unit tests: request validation and business rules
-
-Integration tests: persistence and relationships between customers, accounts and tokens
-
-End-to-end tests: registration, duplicate detection, authentication, authenticated profile retrieval, account creation and customer deletion
-
-CI/CD
-
-The workflow in .github/workflows/ci.yml runs on changes to the main branch. It builds the Maven project and executes the automated test suite. Render handles deployment of successful changes.
-
-Project background
+## Project background
 
 RoyaleBank was originally developed collaboratively as a university project. This repository preserves that shared origin and is being maintained and extended as a software engineering portfolio project.
 
-Individual contributions and subsequent improvements should be documented through the repository's commit history and pull requests.
+Individual contributions and subsequent improvements can be reviewed through the repository's commit history.
 
-Roadmap
+## Roadmap
 
-Add reproducible local setup instructions and environment templates
+- Strengthen authentication and server-side authorisation
+- Add static application security testing
+- Add dynamic application security testing
+- Expand security-focused test coverage
+- Document the application's threat model
+- Improve API documentation
+- Add reproducible local installation instructions
 
-Strengthen authentication and server-side authorisation controls
-
-Add static and dynamic application security testing
-
-Expand negative and security-focused test coverage
-
-Document the threat model and security findings
-
-Improve API documentation and error responses
-
-Disclaimer
+## Disclaimer
 
 RoyaleBank is an educational project. Do not use real personal, banking or authentication data in the application.
