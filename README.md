@@ -28,6 +28,14 @@ The project combines a web interface with a Spring-based REST API, relational da
 - **Testing:** Unit, integration and E2E tests
 - **CI/CD:** GitHub Actions and Render
 
+## My Contribution
+
+My main responsibility was developing the application's frontend JavaScript and integrating the web interface with the backend REST API. This included connecting user interactions to API requests, processing server responses and updating the interface.
+
+A particular concern was understanding how frontend-backend interactions could be abused through malicious requests. This work helped me understand the limits of client-side validation and the importance of enforcing authentication, authorization and data validation on the backend.
+
+I also contributed ideas to the project's design and supported backend development.
+
 ## Application walkthrough
 
 ### Sign in
